@@ -12,15 +12,15 @@
 
 html,
 body {
-  background-color: #ffef96;
+  background-color: #9D8420;
 }
 
-.col {
-  background-color: #676767;
+.col-sm-12 {
+  background-color: #9D8420;
 }
 
 .dragClass {
-  background-color: #b2b2b2;
+  background-color: #83B692;
 }
 
 h1 {
@@ -35,7 +35,7 @@ h1 {
 
 h2 {
   font-size: 20px;
-  background-color: #f4e1d2;
+  background-color: #eeeeee;
   position: relative;
   left: 35px;
   font-family: sans-serif;
@@ -44,31 +44,31 @@ h2 {
 }
 
 li {
-  color: #000000;
+  color: #111111;
   font-family: sans-serif;
 }
 
 #add {
-  color: #50394c;
-  background-color: #50394c;
-  border: 3px solid #50394c;
+  color: #444444;
+  background-color: #cccccc;
+  border: 3px solid #aaaaaa;
   border-radius: 2px;
   position: relative;
   left: 5px;
 }
 
 #add:hover {
-  background-color: #;
+  background-color: #eeeeee;
 }
 
 #addClass {
-  background-color: #;
+  background-color: #cccccc;
   border-radius: 2px;
   border: 3px solid #aaaaaa;
 }
 
 li {
-  background-color: #50394c;
+  background-color: #e4e4e4;
   border: 1px solid #eeeeee;
 }
 </style>
@@ -122,28 +122,40 @@ createItem("quarts", "mineral");
 createItem("rats", "animal");
 createItem("lettuce", "vegetable");
 
-
 function addItemsToMain() {
   console.log("items called", items);
   for (let i = 0; i < items.length; i++) {
-    const taskList = document.getElementById("main")
+    const taskList = document.getElementById("main");
     const newLI = document.createElement("li");
+    newLI.setAttribute("data-id", i);
     newLI.appendChild(document.createTextNode(items[i].name));
     taskList.appendChild(newLI);
   }
 }
 addItemsToMain();
-
+function doOnEnd(e) {
+  const column = e.to.id;
+  const item = e.item.getAttribute("data-id");
+  items[item].column = column;
+  let score = 0;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].category === items[i].column) {
+      score = score + 1;
+    }
+  }
+  console.log("score:", score);
+  document.getElementById("score").textContent = score;
+}
 new Sortable(main, {
   animation: 150,
   ghostClass: "dragClass",
   group: {
     name: "r1",
-    put: false,
-    pull: "clone"
+    put: true
   },
   sort: false,
-  swapThreshold: 1
+  swapThreshold: 1,
+  onEnd: doOnEnd
 });
 
 new Sortable(animal, {
@@ -153,21 +165,24 @@ new Sortable(animal, {
     name: "r1",
     put: true
   },
-  swapThreshold: 1
+  swapThreshold: 1,
+  onEnd: doOnEnd
 });
 
 new Sortable(vegetable, {
   animation: 150,
   ghostClass: "dragClass",
   group: "r1",
-  swapThreshold: 1
+  swapThreshold: 1,
+  onEnd: doOnEnd
 });
 
 new Sortable(mineral, {
   animation: 150,
   ghostClass: "dragClass",
   group: "r1",
-  swapThreshold: 1
+  swapThreshold: 1,
+  onEnd: doOnEnd
 });
     </script>
 </body>
